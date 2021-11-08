@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Изучаем Vue.js</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<meta charset="utf-8" />
+<style>
+   input[type=range]  {
+      width: 700px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      /* outline: none; */
+      overflow: hidden;
+      height: 20px;
+border-radius:30px;
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(14,255,50,1) 0%, rgba(171,246,55,0.23853291316526615) 38%, rgba(241,238,0,1) 67%, rgba(242,33,23,1) 100%, rgba(0,213,251,1) 100%, rgba(239,1,1,1) 100%, rgba(0,212,255,1) 100%);
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 7px;
+
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      background: #ecf0f1;
+      border-radius: 10%;
+
+      cursor: pointer;
+      width:15px;
+      height: 15px;
+      border-radius: 20px;
+      -webkit-appearance: none;
+      margin-top: -4px;
+      background: rgb(255,255,255);
+
+    }
+
+    input[type=range]::-moz-range-track {
+        height: 7px;
+     
+    }
+
+
+   input[type=range]::-moz-range-thumb {
+      background: #ecf0f1;
+      cursor: pointer;
+      height: 7px;
+      border-radius:50%;
+      box-shadow: -200px  0px 0px 200px   #000000;
+      padding: 0px;
+      margin: 0px;
+    }
+    input[type=range]:active {
+       border: none;
+  outline: none;
+       box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    }
+input[type=text]:focus {
+  border: none;
+  outline: none;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+
+ищем: <input type="text" v-model="search">
+  <hr>
+  <div v-for="(item, index) in meData_n" :key="index">
+    <div >
+    <strong contenteditable="true">name:</strong>{{ item.first_name }} <button @click="delUser" v-bind:id="item.id">-</button>
+    </div>
+  </div>
+
+   <hr>
+   добавить пользователя:  <input type="text" v-model="newUser"> <button @click="addUser">+</button> <hr>
+   <input-range :value="value"> </input-range>
+    <button  @click="value50">50%</button>
+    <button  @click="value25">25%</button>
+    <button @click="value75">75%</button>
+  <hr>
+</div>
+
+
+<script>
+Vue.component('input-range', {
+   props: ["value"],
+    template: `
+    <input type="range" v-bind:value="value"  min="0" max="100" step="5">
+    `
+});
+
+
+
+
+
+
+
+
+    var app = new Vue({
+        el: '#app',
+  
+        data: {
+          meData: [{"id":1,"email":"george.bluth@reqres.in","first_name":"George","last_name":"Bluth","avatar":"https://reqres.in/img/faces/1-image.jpg"},{"id":2,"email":"janet.weaver@reqres.in","first_name":"Janet","last_name":"Weaver","avatar":"https://reqres.in/img/faces/2-image.jpg"},{"id":3,"email":"emma.wong@reqres.in","first_name":"Emma","last_name":"Wong","avatar":"https://reqres.in/img/faces/3-image.jpg"},{"id":4,"email":"eve.holt@reqres.in","first_name":"Eve","last_name":"Holt","avatar":"https://reqres.in/img/faces/4-image.jpg"},{"id":5,"email":"charles.morris@reqres.in","first_name":"Charles","last_name":"Morris","avatar":"https://reqres.in/img/faces/5-image.jpg"},{"id":6,"email":"tracey.ramos@reqres.in","first_name":"Tracey","last_name":"Ramos","avatar":"https://reqres.in/img/faces/6-image.jpg"}],
+            search: "",
+            newUser: "",
+            value: "70"
+        },
+          computed: {
+    meData_n() {
+      let obj = this.meData;
+      let newArray = [];
+      const serach = this.search.toLowerCase();
+      console.log(serach);
+      for (key in obj) {
+        el = obj[key]
+        if (el.first_name.toLowerCase().indexOf(serach) != -1) newArray.push(el);
+      }     
+      return newArray;
+    }
+  },
+        methods: {
+            delUser(e) {
+              console.log(e.target.id);
+              var id =e.target.id
+              var result = this.meData.findIndex(function(object) {
+                
+                  return (object.id == id);
+                });
+              console.log(result);
+              this.meData.splice(result, 1);
+       
+            },
+            value25() {
+              this.value = "25";
+                          },
+                        value50() {
+              this.value = "50";
+            },
+                        value75() {
+              this.value = "75";
+            },
+            setMessage: function(event){
+                this.message = event.target.value;
+            },
+            addUser: function() {
+              console.log(this.newUser);
+              this.meData.push({"id":new Date().valueOf(),"email":"n.n@reqres.in","first_name":this.newUser,"last_name":"N","avatar":"N"});
+              this.newUser = "";
+        
+            },
+            setMessage: function(event){
+                this.message = event.target.value;
+            },
+
+
+        },
+    })
+</script>
+</body>
+</html>
